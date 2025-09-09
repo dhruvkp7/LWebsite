@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useRef, useEffect} from "react";
 
 // Cute Sanrio-style Memories Collage (static with popup letter + 10 things)
 // ----------------------------------------------------
@@ -6,6 +6,8 @@ import React, { useState, useEffect } from "react";
 // • Click the bow button (or the Intro card button) to open the letter modal.
 // • “10 Things I Love About You” shows as small rectangles.
 // • All static — no uploads. Great for GitHub Pages/Netlify.
+
+const MUSIC_SRC = "/stickers/spirited-away.mp3";
 
 const TIMELINE = [
   { key: "cover", title: "A cool pic of us I must say with you wearing my hoodie haha:)", src: "/stickers/Blue.jpeg", note: "Me and You bubu ♡" }, // 👈 Added cover image slot
@@ -71,11 +73,42 @@ const STICKERS = {
   cat: "/stickers/cat.svg",
 };
 
-export default function CuteMemories() {
+export default function CuteMemoriesMusicOnly() {
   const [showLetter, setShowLetter] = useState(false);
+  const [isMusicOn, setIsMusicOn] = useState(false);
+  const audioRef = useRef(null);
+  // Load preference on mount
+  useEffect(() => {
+    const saved = localStorage.getItem("music:on");
+    if (saved === "true") setIsMusicOn(true);
+  }, []);
+
+  // Play/pause handler
+  useEffect(() => {
+    localStorage.setItem("music:on", String(isMusicOn));
+    const audio = audioRef.current;
+    if (!audio) return;
+    if (isMusicOn) {
+      const attempt = async () => {
+        try { await audio.play(); }
+        catch { /* will play after next user click if autoplay blocked */ }
+      };
+      attempt();
+    } else {
+      audio.pause();
+    }
+  }, [isMusicOn]);
+  
   return (
     <div className="min-h-screen text-rose-900 bg-[linear-gradient(135deg,#fff0f6_0%,#ffe8f6_30%,#e7f5ff_100%)]">
-      <Header onOpenLetter={() => setShowLetter(true)} />
+      <Header 
+        onOpenLetter={() => setShowLetter(true)}
+        isMusicOn={isMusicOn}
+        toggleMusic={() => setIsMusicOn(v => !v)}
+      />
+
+      {/* Hidden audio element */}
+      <audio ref={audioRef} src={MUSIC_SRC} loop preload="auto" />
 
       {/* Letter Modal */}
       {showLetter && (
@@ -123,29 +156,46 @@ export default function CuteMemories() {
           background-size: 16px 16px;
         }
         .thick-border img { border: 12px solid #f472b6; border-radius: 0.5rem; }
+        @keyframes float {
+          0% { transform: translateY(100vh); opacity: 0; }
+          10% { opacity: 1; }
+          90% { opacity: 1; }
+          100% { transform: translateY(-10vh); opacity: 0; }
+        }
       `}</style>
     </div>
   );
 }
 
-function Header({ onOpenLetter }) {
+
+function Header({ onOpenLetter, isMusicOn, toggleMusic }) {
   return (
     <header className="no-print sticky top-0 z-30 backdrop-blur bg-white/60 border-b border-pink-100">
-      <div className="mx-auto max-w-6xl px-4 py-3 flex items-center gap-3">
+      <div className="mx-auto max-w-6xl px-4 py-3 flex flex-wrap gap-3 items-center">
         <HeartBow />
-        <div className="flex-1">
-          <h1 className="text-2xl font-semibold tracking-tight">Our Cute Little Timeline of from 2024-2025. Happy 3 years babe!!!</h1>
+        <div className="flex-1 min-w-[260px]">
+          <h1 className="text-2xl font-semibold tracking-tight">Our Cute Little Timeline of 2024–2025. Happy 3 years babe!!!</h1>
           <p className="text-sm text-rose-600">Made for Leela's eyes only. I hope you enjoy it my love ♡</p>
         </div>
-        <button onClick={onOpenLetter} className="rounded-full bg-pink-500 text-white text-sm px-4 py-2 hover:bg-pink-600 flex items-center gap-2">
-          <img src={STICKERS.bow} alt="bow" className="w-5 h-5"/>
-          Open your letter
-        </button>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={onOpenLetter}
+            className="rounded-full bg-pink-500 text-white text-sm px-4 py-2 hover:bg-pink-600 flex items-center gap-2 shadow"
+          >
+            <img src={STICKERS.bow} alt="bow" className="w-5 h-5"/>
+            Open your letter
+          </button>
+          <button
+            onClick={toggleMusic}
+            className="rounded-full bg-white border border-pink-200 text-sm px-3 py-2 hover:bg-pink-50 shadow"
+          >
+            {isMusicOn ? "Pause music" : "Play music"}
+          </button>
+        </div>
       </div>
     </header>
   );
 }
-
 
 
 function IntroCard({ onOpenLetter }) {
@@ -227,11 +277,11 @@ function Modal({ title, children, onClose }) {
   );
 }
 
-function TimelineItem({ i, key: _k, title, src, note }) {
+function TimelineItem({ i, title, src, note }) {
   const tilt = i % 2 ? "tilt-l" : "tilt-r";
   return (
-    <section id={_k} className="grid md:grid-cols-[1.1fr,1fr] gap-4 items-start">
-      <div className={"rounded-3xl bg-white border border-rose-100 p-3 polaroid-shadow " + tilt}>
+    <section className="grid md:grid-cols-[1.1fr,1fr] gap-4 items-start">
+      <div className={`rounded-3xl bg-white border border-rose-100 p-3 polaroid-shadow ${tilt}`}>
         <img src={src} alt={title} className="w-full aspect-[4/3] object-cover rounded-2xl" />
         <div className="flex items-center justify-between mt-2">
           <h3 className="font-semibold">{title}</h3>
@@ -240,31 +290,25 @@ function TimelineItem({ i, key: _k, title, src, note }) {
       </div>
       <div className="rounded-3xl bg-white/80 border border-pink-100 p-4">
         <p className="text-sm text-rose-700">{note}</p>
-        <div className="mt-2 flex flex-wrap gap-2 text-xs">
-        </div>
       </div>
     </section>
   );
 }
 
-function Tag({ children }) {
-  return <span className="px-3 py-1 rounded-full bg-pink-50 border border-pink-200 text-rose-600">{children}</span>;
-}
 
 function Footer() {
   return (
     <footer className="no-print border-t border-pink-100 bg-white/60 mt-10">
       <div className="mx-auto max-w-6xl px-4 py-6 text-xs text-rose-600 flex flex-col md:flex-row gap-2 md:items-center md:justify-between">
         <p>Made with cats 🐱 hearts 💖 and bows 🎀 along with my love for my sweetie bubu.</p>
+        <p className="text-rose-500">Thanks for listening with me ♫</p>
       </div>
     </footer>
   );
 }
 
 function HeartBow() {
-  return (
-    <img src={STICKERS.bow} alt="bow" className="w-7 h-7" />
-  );
+  return <img src={STICKERS.bow} alt="bow" className="w-7 h-7" />;
 }
 
 function Bubbles() {
@@ -279,7 +323,18 @@ function Bubbles() {
   return (
     <div aria-hidden className="pointer-events-none fixed inset-0 overflow-hidden">
       {items.map(b => (
-        <img key={b.id} src={b.src} alt="sticker" className="absolute opacity-70" style={{ width: b.size, height: b.size, left: `${b.x}%`, animation: `float ${b.duration}s linear ${b.delay}s infinite` }} />
+        <img
+          key={b.id}
+          src={b.src}
+          alt="sticker"
+          className="absolute opacity-70"
+          style={{
+            width: b.size,
+            height: b.size,
+            left: `${b.x}%`,
+            animation: `float ${b.duration}s linear ${b.delay}s infinite`,
+          }}
+        />
       ))}
       <style>{`
         @keyframes float {
