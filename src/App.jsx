@@ -121,6 +121,7 @@ export default function CuteMemoriesMusicOnly() {
         <IntroCard onOpenLetter={() => setShowLetter(true)} />
 
         <CuteStrip />
+        <LoveNote />  
 
         <section className="mt-10">
           <h2 className="text-xl font-semibold mb-3"> Things I Love About You</h2>
@@ -136,6 +137,7 @@ export default function CuteMemoriesMusicOnly() {
             </li>
           ))}
         </ol>
+      <HeartDivider />
       </main>
 
       <Footer />
@@ -295,6 +297,79 @@ function TimelineItem({ i, title, src, note }) {
   );
 }
 
+/* --- NEW: HeartDivider --- */
+function HeartDivider() {
+  return (
+    <div className="flex justify-center my-8 gap-2 text-rose-400">
+      <span className="animate-bounce">♡</span>
+      <span className="animate-pulse">♡</span>
+      <span className="animate-bounce">♡</span>
+    </div>
+  );
+}
+
+/* --- NEW: LoveNote --- */
+function LoveNote() {
+  return (
+    <section className="mt-14">
+      <div className="rounded-3xl border border-pink-100 bg-white/80 polaroid-shadow overflow-hidden">
+        <div className="bg-gradient-to-r from-rose-100 via-pink-100 to-rose-100 px-5 py-3 flex items-center gap-2">
+          <img src={STICKERS.bow} alt="" className="w-5 h-5" />
+          <h3 className="text-lg font-semibold text-rose-800">
+            My message for you incase you ever decide to look back ♡
+          </h3>
+        </div>
+        <div className="p-6 grid md:grid-cols-[1.1fr,0.9fr] gap-6 items-start">
+          <div>
+            <div
+              className="rounded-2xl border border-pink-200 bg-rose-50/40 p-5 leading-relaxed text-rose-800"
+              style={{ fontFamily: `'Indie Flower', cursive, ui-sans-serif` }}
+            >
+              <p className="mb-3">
+              Leela if you do happen to see this, I just want to say how grateful I am for the time we shared together. 
+              Even though our journey was cut short before we could start our new beginning, 
+              I’ll always be thankful for you and for what our relationship taught me. 
+              You are an amazing, stunning person with a beautiful heart, and anyone would be lucky to have you in their life.
+              I'm sorry that I couldn't be the person you expected of me, and I'll learn from this and do better. 
+              I hope we’ll talk again and come through this stronger. 
+              I’m all in on us and I’m not going to treat this like something that can just be left behind. 
+              You’re far too important to me to ever consider giving up, and someone that I will always put 100% for.
+              I also would not blame you as much as it would hurt if you decide you don't want to talk and I'll understand as well. 
+              </p>
+              <p className="mb-3">
+              Please take care of yourself don’t work too hard, make time to enjoy life with your friends and family, and remember to eat well 
+              and get plenty of rest. I might not be there with you anymore as much as I want to, but I’ll always hope the best for you. 
+              You can do anything you put your mind to, and I believe in you and I love you. Thank you Leela for eveything
+              </p>
+              <p className="mt-4">
+                With all my love,
+                <br />
+                <span className="font-semibold">Dhruv</span>
+              </p>
+            </div>
+          </div>
+          <figure className="text-center">
+            <div className="rounded-2xl border border-rose-100 bg-white p-3 polaroid-shadow tilt-r">
+              <img
+                src="/stickers/Final_Pic.jpeg"
+                alt="Us, a favorite little moment"
+                className="w-full aspect-[4/3] object-cover rounded-xl"
+              />
+            </div>
+            <figcaption className="text-xs text-rose-500 mt-2">
+              Even the moonlight doesn't shine as bright as you!.
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+      <div className="mt-4 flex justify-center gap-3 opacity-80">
+        <img src={STICKERS.heart} alt="" className="w-5 h-5" />
+        <img src={STICKERS.sparkle} alt="" className="w-5 h-5" />
+        <img src={STICKERS.cat} alt="" className="w-5 h-5" />
+      </div>
+    </section>
+  );
+}
 
 function Footer() {
   return (
