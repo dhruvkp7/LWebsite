@@ -106,7 +106,8 @@ export default function CuteMemoriesMusicOnly() {
         isMusicOn={isMusicOn}
         toggleMusic={() => setIsMusicOn(v => !v)}
       />
-
+      
+      <SongChoice />
       {/* Hidden audio element */}
       <audio ref={audioRef} src={MUSIC_SRC} loop preload="auto" />
 
@@ -370,6 +371,71 @@ function LoveNote() {
     </section>
   );
 }
+
+function SongChoice() {
+  return (
+    <section className="mt-14">
+      <div className="rounded-3xl border border-pink-100 bg-white/80 polaroid-shadow overflow-hidden">
+        <div className="bg-gradient-to-r from-rose-100 via-pink-100 to-rose-100 px-5 py-3 flex items-center gap-2">
+          <img src={STICKERS.bow} alt="" className="w-5 h-5" />
+          <h3 className="text-lg font-semibold text-rose-800">
+            Why I chose this song ♡
+          </h3>
+        </div>
+        <div className="p-6 grid md:grid-cols-[1.1fr,0.9fr] gap-6 items-start">
+          <div>
+            <div
+              className="rounded-2xl border border-pink-200 bg-rose-50/40 p-5 leading-relaxed text-rose-800"
+              style={{ fontFamily: `'Indie Flower', cursive, ui-sans-serif` }}
+            >
+              <p className="mb-3">
+              This song I liked a lot when we first started dating and reminds me about the time we had together when we were so nervous to talk to one another. 
+              I really do miss you a lot Leela it's hard here without you, and I'm so heartbroken that I haven't gotten to talk to you at all and the last words we texted each other
+              was not what we wanted. 
+
+              I know you said that I tried to change the story to fit what I wanted but it meant to share context around the parts that hurt most, not to rewrite the story or erase mistakes. 
+              On Aug 10, seeing the full context seemed to matter more than any explanation, and I could tell that it wasn't just emotion you were feeling rather truth of what I was saying.
+              I beleive if you firmly thought I was disloyal from the start the context would not have changed your mind at all. 
+              I flew all the way to Ohio to prove this to you, and wouldn't have gone so far unless I really put everything I had and believed in us.
+              </p>
+              <p className="mb-3">
+              From the start, the effort was to choose us and make it work. It still surprises me how quickly things changed. 
+              I don't think we’re each other’s enemy, and despite everything you have said I still care and love you the same; the plan was to take some time to think things through, and that window closed faster than expected. 
+              Blame won’t help either of us and I really don't think we should cut each other out like this. I don't beleive we would want it to end this way. 
+              Please Leela I hope you'll consider us talking one day.
+              </p>
+              <p className="mt-4">
+                I love you,
+                <br />
+                <span className="font-semibold">Dhruv</span>
+              </p>
+            </div>
+          </div>
+          <figure className="text-center">
+            <div className="rounded-2xl border border-rose-100 bg-white p-3 polaroid-shadow tilt-r">
+              <img
+                src="/stickers/ApplePicking.jpeg"
+                alt="Us, a favorite little moment"
+                className="w-full aspect-[4/3] object-cover rounded-xl"
+              />
+            </div>
+            <figcaption className="text-xs text-rose-500 mt-2">
+              Apple Picking ♡
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+      <div className="mt-4 flex justify-center gap-3 opacity-80">
+        <img src={STICKERS.heart} alt="" className="w-5 h-5" />
+        <img src={STICKERS.sparkle} alt="" className="w-5 h-5" />
+        <img src={STICKERS.cat} alt="" className="w-5 h-5" />
+      </div>
+    </section>
+  );
+}
+
+
+
 
 function Footer() {
   return (
